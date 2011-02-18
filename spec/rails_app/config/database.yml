@@ -6,6 +6,14 @@ sqlite3: &SQLITE
   adapter: sqlite3
   database: acts_as_audited_plugin.sqlite3.db
 
+jrubysqlite3mem: &JRUBYSQLITE3MEM
+  adapter: jdbcsqlite3
+  database: ":memory:"
+
+jrubysqlite3: &JRUBYSQLITE
+  adapter: jdbcsqlite3
+  database: acts_as_audited_plugin.sqlite3.db
+
 postgresql: &POSTGRES
   adapter: postgresql
   username: postgres
