@@ -10,6 +10,7 @@ require 'action_controller/test_process'
 require 'action_view'
 require 'test/unit'
 require 'shoulda'
+require 'resque_unit'
 
 gem 'jnunemaker-matchy'
 require 'matchy'

@@ -40,6 +40,13 @@ module CollectiveIdea #:nodoc:
         base.extend ClassMethods
       end
 
+      class AddAuditJob
+        @queue = :audit_queue
+        def self.perform(object, audit_attrs)
+          object.audits.create audit_attrs
+        end
+      end
+
       module ClassMethods
         # == Configuration options
         #
@@ -249,7 +256,10 @@ module CollectiveIdea #:nodoc:
 
         def write_audit(attrs)
           self.audit_comment = nil
-          self.audits.create attrs if auditing_enabled
+          #self.audits.create attrs if auditing_enabled
+          if auditing_enabled
+            Resque.enqueue(AddAuditJob, self, attrs)
+          end
         end
   
         def require_comment

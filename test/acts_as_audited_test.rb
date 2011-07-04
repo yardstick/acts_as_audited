@@ -161,7 +161,9 @@ module CollectiveIdea
 
       context "revisions" do
         setup do
+          Resque.reset!
           @user = create_versions
+          Resque.run!
         end
 
         should "be an Array of Users" do
