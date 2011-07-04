@@ -3,3 +3,6 @@ test/debug.log
 doc/
 coverage/
 pkg
+*.swp
+.rvmrc
+tags

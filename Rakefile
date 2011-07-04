@@ -3,6 +3,7 @@ require 'load_multi_rails_rake_tasks'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
+
 desc 'Default: run tests.'
 task :default => :test
 
