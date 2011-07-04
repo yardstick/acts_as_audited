@@ -240,30 +240,32 @@ module CollectiveIdea #:nodoc:
 
         def audit_create
           write_audit(:action => 'create', :changes => audited_attributes, 
-            :comment => audit_comment, :auditable_parent => auditable_parent)
+            :auditable_parent => auditable_parent)
         end
 
         def audit_update
           unless (changes = audited_changes).empty?
             write_audit(:action => 'update', :changes => changes, 
-              :comment => audit_comment, :auditable_parent => auditable_parent)
+              :auditable_parent => auditable_parent)
           end
         end
 
         def audit_destroy
           write_audit(:action => 'destroy', :changes => audited_attributes,
-            :comment => audit_comment, :auditable_parent => auditable_parent)
+            :auditable_parent => auditable_parent)
         end
 
         def write_audit(attrs)
           self.audit_comment = nil
           #self.audits.create attrs if auditing_enabled
           if auditing_enabled
-            dt = DateTime.now
-            attrs[:update_at] = dt
-            attrs[:created_at] = dt
+            attrs[:created_at] = Time.now.utc
             attrs[:auditable_id] = self.id
             attrs[:auditable_type] = self.class.to_s
+            audit = Audit.new(attrs)
+            audit.valid? 
+            attrs[:user_id] = audit.user_id
+            attrs[:user_type] = audit.user_type
             Resque.enqueue(AddAuditJob, attrs)
           end
         end

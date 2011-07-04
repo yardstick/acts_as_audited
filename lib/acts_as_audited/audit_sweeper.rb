@@ -24,7 +24,7 @@ class AuditSweeper < ActionController::Caching::Sweeper #:nodoc:
   cattr_accessor :current_user_method
   self.current_user_method = :current_user
 
-  def before_create(audit)
+  def before_validation(audit)
     audit.user ||= current_user
   end
 

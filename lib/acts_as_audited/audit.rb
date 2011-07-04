@@ -101,6 +101,10 @@ class Audit < ActiveRecord::Base
     record
   end
 
+  def self.get_current_user
+    Thread.current[:acts_as_audited_user] if Thread.current[:acts_as_audited_user]
+  end
+
 private
 
   def set_version_number
@@ -113,7 +117,7 @@ private
   end
 
   def set_audit_user
-    self.user = Thread.current[:acts_as_audited_user] if Thread.current[:acts_as_audited_user]
+    self.user ||= Audit.get_current_user
     nil # prevent stopping callback chains
   end
 
