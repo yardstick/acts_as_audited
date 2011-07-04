@@ -42,8 +42,9 @@ module CollectiveIdea #:nodoc:
 
       class AddAuditJob
         @queue = :audit_queue
-        def self.perform(object, audit_attrs)
-          object.audits.create audit_attrs
+
+        def self.perform(audit_attrs)
+          Audit.create(audit_attrs)
         end
       end
 
@@ -261,7 +262,9 @@ module CollectiveIdea #:nodoc:
             dt = DateTime.now
             attrs[:update_at] = dt
             attrs[:created_at] = dt
-            Resque.enqueue(AddAuditJob, self, attrs)
+            attrs[:auditable_id] = self.id
+            attrs[:auditable_type] = self.class.to_s
+            Resque.enqueue(AddAuditJob, attrs)
           end
         end
   

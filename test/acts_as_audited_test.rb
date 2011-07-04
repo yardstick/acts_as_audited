@@ -180,7 +180,7 @@ module CollectiveIdea
         end
 
         should "set the attributes for each revision" do
-          u = User.create(:name => 'Brandon', :username => 'brandon')
+          u = create_user(:name => 'Brandon', :username => 'brandon')
           u.update_attributes :name => 'Foobar'
           u.update_attributes :name => 'Awesome', :username => 'keepers'
 
@@ -197,7 +197,7 @@ module CollectiveIdea
         end
 
         should "access to only recent revisions" do
-          u = User.create(:name => 'Brandon', :username => 'brandon')
+          u = create_user(:name => 'Brandon', :username => 'brandon')
           u.update_attributes :name => 'Foobar'
           u.update_attributes :name => 'Awesome', :username => 'keepers'
 
@@ -251,7 +251,7 @@ module CollectiveIdea
         end
         
         should "be able to set protected attributes" do
-          u = User.create(:name => 'Brandon')
+          u = create_user(:name => 'Brandon')
           u.update_attribute :logins, 1
           u.update_attribute :logins, 2
 
@@ -261,12 +261,12 @@ module CollectiveIdea
         end
         
         should "set attributes directly" do
-          u = User.create(:name => '<Joe>')
+          u = create_user(:name => '<Joe>')
           u.revision(1).name.should == '&lt;Joe&gt;'
         end
 
         should "set the attributes for each revision" do
-          u = User.create(:name => 'Brandon', :username => 'brandon')
+          u = create_user(:name => 'Brandon', :username => 'brandon')
           u.update_attributes :name => 'Foobar'
           u.update_attributes :name => 'Awesome', :username => 'keepers'
 
@@ -282,7 +282,7 @@ module CollectiveIdea
 
         should "be able to get time for first revision" do
           suspended_at = Time.now
-          u = User.create(:suspended_at => suspended_at)
+          u = create_user(:suspended_at => suspended_at)
           u.revision(1).suspended_at.should == suspended_at
         end
 
@@ -326,7 +326,7 @@ module CollectiveIdea
 
         should "not save an audit inside of the #without_auditing block" do
           lambda do
-            User.without_auditing { User.create(:name => 'Brandon') }
+            User.without_auditing { create_user(:name => 'Brandon') }
           end.should_not change { Audit.count }
         end
       end
@@ -349,7 +349,7 @@ module CollectiveIdea
         
         context "on update" do
           setup do
-            @user = CommentRequiredUser.create(:audit_comment => "Create")
+            @user = CommentRequiredcreate_user(:audit_comment => "Create")
           end
           should "not validate when audit_comment is not supplied" do
             @user.update_attributes(:name => "Test").should == false
@@ -363,7 +363,7 @@ module CollectiveIdea
 
         context "on destroy" do
           setup do
-            @user = CommentRequiredUser.create(:audit_comment => "Create")
+            @user = CommentRequiredcreate_user(:audit_comment => "Create")
           end
 
           should "not validate when audit_comment is unset" do
@@ -404,7 +404,7 @@ module CollectiveIdea
 
       context "audit as" do
         setup do
-          @user = User.create :name => 'Testing'
+          @user = create_user :name => 'Testing'
         end
 
         should "record user objects" do
@@ -430,6 +430,14 @@ module CollectiveIdea
             end
           end
         end
+      end
+
+      private
+      def create_user(args)
+        Resque.reset!
+        User.create(args).tap{|u|
+          Resque.run!
+        }
       end
 
     end
