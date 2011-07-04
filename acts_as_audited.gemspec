@@ -5,27 +5,30 @@
 
 Gem::Specification.new do |s|
   s.name = %q{acts_as_audited}
-  s.version = "1.1.1"
+  s.version = "1.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Brandon Keepers"]
-  s.date = %q{2010-04-03}
+  s.date = %q{2011-07-04}
   s.email = %q{brandon@opensoul.org}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README"
+     "README.rdoc"
   ]
   s.files = [
     ".gitignore",
      "CHANGELOG",
      "LICENSE",
-     "README",
+     "README.rdoc",
      "Rakefile",
      "VERSION",
      "acts_as_audited.gemspec",
      "generators/audited_migration/USAGE",
      "generators/audited_migration/audited_migration_generator.rb",
      "generators/audited_migration/templates/migration.rb",
+     "generators/audited_migration_update/USAGE",
+     "generators/audited_migration_update/audited_migration_update_generator.rb",
+     "generators/audited_migration_update/templates/migration.rb",
      "init.rb",
      "lib/acts_as_audited.rb",
      "lib/acts_as_audited/audit.rb",
@@ -39,9 +42,9 @@ Gem::Specification.new do |s|
      "test/test_helper.rb"
   ]
   s.homepage = %q{http://github.com/collectiveidea/acts_as_audited}
-  s.rdoc_options = ["--charset=UTF-8"]
+  s.rdoc_options = ["--charset=UTF-8", "--main", "README.rdoc", "--line-numbers", "--inline-source"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.4.2}
   s.summary = %q{ActiveRecord extension that logs all changes to your models in an audits table}
   s.test_files = [
     "test/acts_as_audited_test.rb",
@@ -52,10 +55,9 @@ Gem::Specification.new do |s|
   ]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activerecord>, [">= 2.1"])
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
       s.add_development_dependency(%q<jnunemaker-matchy>, [">= 0"])
