@@ -258,6 +258,9 @@ module CollectiveIdea #:nodoc:
           self.audit_comment = nil
           #self.audits.create attrs if auditing_enabled
           if auditing_enabled
+            dt = DateTime.now
+            attrs[:update_at] = dt
+            attrs[:created_at] = dt
             Resque.enqueue(AddAuditJob, self, attrs)
           end
         end
