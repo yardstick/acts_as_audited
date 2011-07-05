@@ -256,7 +256,9 @@ module CollectiveIdea #:nodoc:
         end
 
         def write_audit(attrs)
-          self.audit_comment = nil unless frozen?
+          # FIXME this broke some stuff with frozen object ans soft destroy
+          #self.audit_comment = nil unless frozen?
+          
           #self.audits.create attrs if auditing_enabled
           if auditing_enabled
             attrs[:created_at] = Time.now.utc
