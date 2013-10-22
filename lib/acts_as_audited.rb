@@ -103,7 +103,12 @@ module CollectiveIdea #:nodoc:
             attr_accessible :audit_comment
           end
 
-          has_many :audits, :as => :auditable, :order => "#{Audit.quoted_table_name}.version"
+          has_many_options = {
+            :as => :auditable,
+            :order => "#{Audit.quoted_table_name}.version"
+          }
+          has_many_options[:dependent] = options[:dependent] if options[:dependent]
+          has_many :audits, has_many_options
           attr_protected :audit_ids if options[:protect]
           Audit.audited_class_names << self.to_s
           
